@@ -3,11 +3,12 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import axios from 'axios';
-import Button from 'primevue/button';
 
 
-const url = 'https://api.openweathermap.org/data/2.5/';
-const apiKey = '59dfe2fd64f58d3b8b28902ad7490fde';
+const url = import.meta.env.VITE_WEATHER_API_URL;
+const apiKey = import.meta.env.VITE_WEATHER_API_KEY;
+
+console.log(url, apiKey)
 
 const searchInput = ref<string>();
 const city = ref<string>();
@@ -40,11 +41,11 @@ const getWeather = () => {
 </script>
 
 <template>
-  <div class="wheather-app" m-20>
+  <div class="weather-app" m-20>
     <div class="header">
-      <h1>Wheather</h1>
+      <h1>Weather</h1>
       <input v-model="searchInput" type="text" placeholder="Enter city" />
-      <button @click="getWeather">Search</button>
+      <!-- <button @click="getWeather">Search</button> -->
       <Button label="Submit" />
     </div>
 

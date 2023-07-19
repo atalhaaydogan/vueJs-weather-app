@@ -16,7 +16,7 @@ body {
   height: 100vh;
 }
 
-.wheather-app {
+.weather-app {
   display: flex;
   flex-direction: column;
   align-items: center;
