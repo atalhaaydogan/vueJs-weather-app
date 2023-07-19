@@ -1,43 +1,21 @@
 
 
-<template>
-  <div class="wheather-app" m-20>
-    <div class="header">
-      <h1 >Wheather</h1>
-    <input v-model="searchInput" type="text" placeholder="Enter city" />
-    <button @click="getWeather">Search</button>
-  </div>
-
-  <div class="content">
-    <div class="city">{{ city }}</div>
-    <div class="temp">{{ temp }} </div>
-    <div class="desc">{{ desc }}</div>
-    <div class="minmax">{{ minmax }}</div>
-    
-  </div>
-  </div>
-</template>
-  
-  <script lang="ts">
+<script setup lang="ts">
 import { ref } from 'vue';
 import axios from 'axios';
+import Button from 'primevue/button';
 
 
+const url = 'https://api.openweathermap.org/data/2.5/';
+const apiKey = '59dfe2fd64f58d3b8b28902ad7490fde';
 
-export default {
-  setup() {
-    const url = 'https://api.openweathermap.org/data/2.5/';
-    const apiKey = 'APIKEY';
+const searchInput = ref<string>();
+const city = ref<string>();
+const temp = ref<any>();
+const desc = ref<string>();
+const minmax = ref<any>();
 
-    const searchInput = ref<string>();
-    const city = ref<string>();
-    const temp = ref<any>();
-    const desc = ref<string>();
-    const minmax = ref<any>();
-
-    
-
-    const getWeather = () => {
+const getWeather = () => {
   axios
     .get(`${url}weather`, {
       params: {
@@ -57,20 +35,25 @@ export default {
         Math.round(data.main.temp_max) +
         ' ℃';
     })
-    .catch((err) => alert('Wrong City Name!'));
-};
-    return {
-      searchInput,
-      city,
-      temp,
-      desc,
-      minmax,
-      getWeather,
-    };
-  },
+    .catch(() => alert('Wrong City Name!'));
 };
 </script>
 
-<style>
+<template>
+  <div class="wheather-app" m-20>
+    <div class="header">
+      <h1>Wheather</h1>
+      <input v-model="searchInput" type="text" placeholder="Enter city" />
+      <button @click="getWeather">Search</button>
+      <Button label="Submit" />
+    </div>
 
-</style>
+    <div class="content">
+      <div class="city">{{ city }}</div>
+      <div class="temp">{{ temp }} </div>
+      <div class="desc">{{ desc }}</div>
+      <div class="minmax">{{ minmax }}</div>
+
+    </div>
+  </div>
+</template>
