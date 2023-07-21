@@ -61,5 +61,14 @@ h1{
 }
 
 
+.pi-times {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  cursor: pointer;
+  font-size: 18px;
+  color: #888;
+}
+
 
 

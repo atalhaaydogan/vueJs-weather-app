@@ -1,19 +1,15 @@
-
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import axios from 'axios';
 import WeatherCard from './WeatherCard.vue'
 
-
+const STORAGE_KEY = 'weatherCards';
 const url = import.meta.env.VITE_WEATHER_API_URL;
 const apiKey = import.meta.env.VITE_WEATHER_API_KEY;
 
+const citiesWeatherData = ref<any[]>([]);
 const searchInput = ref<string>();
-const city = ref<string>();
-const temp = ref<any>();
-const desc = ref<string>();
-const isVisibleWeatherCard = ref(false)
-
+const isVisibleWeatherCard = ref(false);
 
 const getWeather = () => {
   axios
@@ -25,19 +21,39 @@ const getWeather = () => {
       }
     })
     .then((response) => {
-      const data = response.data;
-      temp.value = Math.round(data.main.temp) + " ℃";
-      desc.value = data.weather[0].description;
-      city.value = data.name;
-      isVisibleWeatherCard.value = true
+      const { data } = response;
 
+      const cityWeatherData = {
+        city: data.name,
+        temp: Math.round(data.main.temp) + '°C',
+        desc: data.weather[0].description
+      };
+      citiesWeatherData.value.push(cityWeatherData);
+      isVisibleWeatherCard.value = true;
+
+      // Save data to local storage
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(citiesWeatherData.value));
     })
     .catch(() => alert('Wrong City Name!'));
-
 };
 
+const loadWeatherCardsFromLocalStorage = () => {
+  const storedWeatherData = localStorage.getItem(STORAGE_KEY);
+  if (storedWeatherData) {
+    citiesWeatherData.value = JSON.parse(storedWeatherData);
+    isVisibleWeatherCard.value = true;
+  }
+};
 
+const clearWeatherCardsFromLocalStorage = () => {
+  localStorage.removeItem(STORAGE_KEY);
+  citiesWeatherData.value = [];
+  isVisibleWeatherCard.value = false;
+};
 
+onMounted(() => {
+  loadWeatherCardsFromLocalStorage();
+});
 </script>
 
 <template>
@@ -50,14 +66,14 @@ const getWeather = () => {
           <InputText v-model="searchInput" placeholder="Enter City" />
         </span>
       </div>
-      <Button class="mt-1" type="button" label="Search" icon="pi pi-search" @click="getWeather" />
+      <Button class="mt-1 mr-2" type="button" label="Search" icon="pi pi-search" @click="getWeather" />
+      <Button class="mt-1" type="button" label="Clear Weather Cards" @click="clearWeatherCardsFromLocalStorage" />
     </div>
 
-
-
-    <div class="content">
-      <WeatherCard v-if="isVisibleWeatherCard" :city="city" :temp="temp" :desc="desc" />
+    <div class="'content' flex flex-wrap" >
+      <div v-for="(weatherData, index) in citiesWeatherData" :key="index">
+        <WeatherCard v-if="isVisibleWeatherCard" :city="weatherData.city" :temp="weatherData.temp" :desc="weatherData.desc" />
+      </div>
     </div>
-
   </div>
 </template>

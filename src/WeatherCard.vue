@@ -2,12 +2,12 @@
     <Card style="width: 20em">
         <template #title>
             <div>{{ props?.city }}</div>
-            <div></div>
+            <div><img width="200" :src="background" alt=""></div>
         </template>
         <template #content>
-            <div class="temperature">{{ props?.temp }}</div>
-            <div class="weather-icon">
-                <i :class="getWeatherIcon(props?.desc)" />
+            <div class="'temperature' text-xl">{{ props?.temp }}</div>
+            <div class="'weather-icon' mt-2">
+                <i :class="getWeatherIcon(props?.desc)" class="text-xl" />
             </div>
         </template>
 
@@ -15,8 +15,10 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps } from "vue";
+import axios from "axios";
+import { defineProps, onMounted, ref } from "vue";
 
+const background = ref<string>('')
 
 const props = defineProps({
     city: String,
@@ -24,17 +26,24 @@ const props = defineProps({
     desc: String
 })
 
-const getImageFromAPI = (city: string | undefined) => {
-    if (!city) return document.body.style.backgroundImage = "url(/img.jpg)";
+onMounted(()=>{
+    getImageFromAPI(props.city)
+})
 
-    fetch('https://api.teleport.org/api/urban_areas/slug:' + city + '/images/').then((resp) => {
-        return resp.json();
-    }).then((data) => {
-        const imageUrl = data.status === 404 ? '/img.jpg' : data?.photos[0]?.image?.mobile;
-        document.body.style.backgroundImage = "url('" + imageUrl + "')";
+const getImageFromAPI = (city: string | undefined) => {
+    if (!city)  {
+        background.value = "/img.jpg";
+        return;
+    }
+
+    axios.get('https://api.teleport.org/api/urban_areas/slug:' + city.toLocaleLowerCase() + '/images/')
+    .then((response:any) => {
+        const imageUrl = response.data?.photos[0]?.image?.mobile;
+        background.value = imageUrl;
+        
     }).catch(
-        (err) => {
-            document.body.style.backgroundImage = "url(/img.jpg)";
+        () => {
+            background.value = "/img.jpg";
         }
     )
 }
