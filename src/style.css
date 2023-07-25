@@ -10,11 +10,7 @@
 }
 
 body {
-  background-color: #EEEDED;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: cover;
-  height: 100vh;
+  background-color: #707070;
 }
 
 .weather-app {
@@ -23,7 +19,7 @@ body {
   align-items: center;
   text-align: center;
   background: rgba(0, 0, 0, 0.5);
-  height: 100vh;
+  background-color: #707070;
 }
 
 .header{
@@ -60,15 +56,16 @@ h1{
   margin-bottom: 15px;
 }
 
-
-.pi-times {
-  position: absolute;
-  top: 5px;
-  right: 5px;
-  cursor: pointer;
-  font-size: 18px;
-  color: #888;
+.content.grid-3x3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
 }
 
+.weather-card {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 
 

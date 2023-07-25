@@ -2,6 +2,9 @@
 import { ref, onMounted } from 'vue';
 import axios from 'axios';
 import WeatherCard from './WeatherCard.vue'
+import {useWeatherStore} from './store/weatherstore'
+import { storeToRefs } from 'pinia'
+
 
 const STORAGE_KEY = 'weatherCards';
 const url = import.meta.env.VITE_WEATHER_API_URL;
@@ -10,6 +13,8 @@ const apiKey = import.meta.env.VITE_WEATHER_API_KEY;
 const citiesWeatherData = ref<any[]>([]);
 const searchInput = ref<string>();
 const isVisibleWeatherCard = ref(false);
+const { weathers} = storeToRefs(useWeatherStore)
+
 
 const getWeather = () => {
   axios
@@ -26,15 +31,26 @@ const getWeather = () => {
       const cityWeatherData = {
         city: data.name,
         temp: Math.round(data.main.temp) + '°C',
-        desc: data.weather[0].description
+        desc: data.weather[0].description,
+
+
+
+
       };
       citiesWeatherData.value.push(cityWeatherData);
       isVisibleWeatherCard.value = true;
 
+
+
       // Save data to local storage
       localStorage.setItem(STORAGE_KEY, JSON.stringify(citiesWeatherData.value));
+      weathers.value.push(citiesWeatherData.value)
+      console.log(weathers);
+      
     })
-    .catch(() => alert('Wrong City Name!'));
+  
+    
+    .catch((e) => console.log(e));
 };
 
 const loadWeatherCardsFromLocalStorage = () => {
@@ -51,10 +67,12 @@ const clearWeatherCardsFromLocalStorage = () => {
   isVisibleWeatherCard.value = false;
 };
 
+
 onMounted(() => {
   loadWeatherCardsFromLocalStorage();
 });
 </script>
+
 
 <template>
   <div class="weather-app">
@@ -70,9 +88,10 @@ onMounted(() => {
       <Button class="mt-1" type="button" label="Clear Weather Cards" @click="clearWeatherCardsFromLocalStorage" />
     </div>
 
-    <div class="'content' flex flex-wrap" >
+    <div class="content grid-3x3">
       <div v-for="(weatherData, index) in citiesWeatherData" :key="index">
-        <WeatherCard v-if="isVisibleWeatherCard" :city="weatherData.city" :temp="weatherData.temp" :desc="weatherData.desc" />
+        <WeatherCard :cardId="weatherData.index" v-if="isVisibleWeatherCard" :city="weatherData.city"
+          :temp="weatherData.temp" :desc="weatherData.desc" />
       </div>
     </div>
   </div>

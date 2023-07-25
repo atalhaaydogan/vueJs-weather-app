@@ -1,8 +1,17 @@
 <template>
-    <Card style="width: 20em">
+    <Card style="width: 20em" class="position: relative" @mouseenter="showDeleteIcon = true"
+        @mouseleave="showDeleteIcon = false">
+        <template #header>
+            <div class="d-flex justify-content-between">
+                <div class="text-xl ">{{ props?.city }}</div>
+                <div class="text-xl">
+                    <Button v-if="showDeleteIcon" icon="pi pi-times" class="p-button-rounded p-button-text delete-icon"
+                        @click="deleteFromLocalStorage(props?.cardId)" />
+                </div>
+            </div>
+        </template>
         <template #title>
-            <div>{{ props?.city }}</div>
-            <div><img width="200" :src="background" alt=""></div>
+            <div><img width="250" height="133" :src="background" alt=""></div>
         </template>
         <template #content>
             <div class="'temperature' text-xl">{{ props?.temp }}</div>
@@ -23,34 +32,42 @@ const background = ref<string>('')
 const props = defineProps({
     city: String,
     temp: String,
-    desc: String
+    desc: String,
+    cardId: Number
 })
 
-onMounted(()=>{
+onMounted(() => {
     getImageFromAPI(props.city)
 })
 
+// const deleteFromLocalStorage = (cardId: Number) => {
+//     // delete local storage 
+//     const storedWeatherData = localStorage.getItem('weatherCards');
+//     if (storedWeatherData) {
+//         const data = JSON.parse(storedWeatherData);
+//         const newData = data.filter((item: any) => item.index !== cardId);
+//         localStorage.setItem('weatherCards', JSON.stringify(newData));
+//     }
+
+// }
+
 const getImageFromAPI = (city: string | undefined) => {
-    if (!city)  {
+    if (!city) {
         background.value = "/img.jpg";
         return;
     }
 
     axios.get('https://api.teleport.org/api/urban_areas/slug:' + city.toLocaleLowerCase() + '/images/')
-    .then((response:any) => {
-        const imageUrl = response.data?.photos[0]?.image?.mobile;
-        background.value = imageUrl;
-        
-    }).catch(
-        () => {
-            background.value = "/img.jpg";
-        }
-    )
+        .then((response: any) => {
+            const imageUrl = response.data?.photos[0]?.image?.mobile;
+            background.value = imageUrl;
+
+        }).catch(
+            () => {
+                background.value = "/img.jpg";
+            }
+        )
 }
-
-
-
-
 
 const getWeatherIcon = (description: any) => {
     console.log(description)
@@ -97,3 +114,14 @@ const getWeatherIcon = (description: any) => {
     return iconClass;
 };
 </script>
+
+
+<style scoped>
+.delete-icon {
+    position: absolute;
+    right: 0;
+    top: 0;
+
+}
+
+</style>
