@@ -1,98 +1,34 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
-import axios from 'axios';
-import WeatherCard from './WeatherCard.vue'
-import {useWeatherStore} from './store/weatherstore'
-import { storeToRefs } from 'pinia'
+import { ref } from 'vue';
+import WeatherCard from '@/components/WeatherCard.vue'
+import { useWeatherStore } from '@/store/weather'
 
+const weatherStore = useWeatherStore()
 
-const STORAGE_KEY = 'weatherCards';
-const url = import.meta.env.VITE_WEATHER_API_URL;
-const apiKey = import.meta.env.VITE_WEATHER_API_KEY;
+const cityName = ref<string>('');
 
-const citiesWeatherData = ref<any[]>([]);
-const searchInput = ref<string>();
-const isVisibleWeatherCard = ref(false);
-const { weathers} = storeToRefs(useWeatherStore)
+const addCity = () => {
+  const cityNameNormalized = cityName.value.toLocaleLowerCase()
 
-
-const getWeather = () => {
-  axios
-    .get(`${url}weather`, {
-      params: {
-        q: searchInput.value,
-        units: 'metric',
-        appid: apiKey
-      }
-    })
-    .then((response) => {
-      const { data } = response;
-
-      const cityWeatherData = {
-        city: data.name,
-        temp: Math.round(data.main.temp) + '°C',
-        desc: data.weather[0].description,
-
-
-
-
-      };
-      citiesWeatherData.value.push(cityWeatherData);
-      isVisibleWeatherCard.value = true;
-
-
-
-      // Save data to local storage
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(citiesWeatherData.value));
-      weathers.value.push(citiesWeatherData.value)
-      console.log(weathers);
-      
-    })
-  
-    
-    .catch((e) => console.log(e));
-};
-
-const loadWeatherCardsFromLocalStorage = () => {
-  const storedWeatherData = localStorage.getItem(STORAGE_KEY);
-  if (storedWeatherData) {
-    citiesWeatherData.value = JSON.parse(storedWeatherData);
-    isVisibleWeatherCard.value = true;
+  if (cityNameNormalized && weatherStore.cities.indexOf(cityNameNormalized) === -1) {
+    weatherStore.cities.push(cityNameNormalized)
   }
-};
 
-const clearWeatherCardsFromLocalStorage = () => {
-  localStorage.removeItem(STORAGE_KEY);
-  citiesWeatherData.value = [];
-  isVisibleWeatherCard.value = false;
-};
+  cityName.value = ''
+}
 
-
-onMounted(() => {
-  loadWeatherCardsFromLocalStorage();
-});
 </script>
 
-
 <template>
-  <div class="weather-app">
-    <div class="header">
-      <h1 class="mb-3">Weather</h1>
-      <div>
-        <span class="p-input-icon-left mb-3">
-          <i class="pi pi-search" />
-          <InputText v-model="searchInput" placeholder="Enter City" />
-        </span>
-      </div>
-      <Button class="mt-1 mr-2" type="button" label="Search" icon="pi pi-search" @click="getWeather" />
-      <Button class="mt-1" type="button" label="Clear Weather Cards" @click="clearWeatherCardsFromLocalStorage" />
-    </div>
+  <div>
+    <InputText v-model="cityName" placeholder="Enter City" />
+    <Button label="Submit" @click="addCity" />
+  </div>
 
-    <div class="content grid-3x3">
-      <div v-for="(weatherData, index) in citiesWeatherData" :key="index">
-        <WeatherCard :cardId="weatherData.index" v-if="isVisibleWeatherCard" :city="weatherData.city"
-          :temp="weatherData.temp" :desc="weatherData.desc" />
-      </div>
+
+  <div class="grid mt-5 ">
+    <div class="xl:col-3 lg:col-6 md:col-10 sm:col-12" v-for="city in weatherStore.cities">
+      <WeatherCard class="mt-3" :city="city" />
     </div>
   </div>
 </template>

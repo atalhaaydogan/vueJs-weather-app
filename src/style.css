@@ -1,71 +1,10 @@
-
-@import  "primevue/resources/themes/lara-light-indigo/theme.css";
-@import 'primeicons/primeicons.css';
-
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: "Poppins", sans-serif;
-}
-
 body {
-  background-color: #707070;
+  font-family: var(--font-family);
 }
 
-.weather-app {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  background: rgba(0, 0, 0, 0.5);
-  background-color: #707070;
+.deleteIcon{display: none !important;}
+
+.p-card:hover .deleteIcon{
+  display: inline !important;
 }
-
-.header{
-  padding: 50px 25px 35px 25px;
-}
-
-h1{
-  font-size: 60px;
-  color: #fff;
-}
-
-
-.city{
-  color: #fff;
-  font-size: 30px;
-  margin-bottom: 15px;
-}
-
-.temp{
-  color: #fff;
-  font-size: 100px;
-  margin-bottom: 10px;
-}
-
-.desc{
-  color: #fff;
-  font-size: 30px;
-  margin-bottom: 15px;
-}
-
-.minmax{
-  color: #fff;
-  font-size: 20px;
-  margin-bottom: 15px;
-}
-
-.content.grid-3x3 {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 20px;
-}
-
-.weather-card {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
 

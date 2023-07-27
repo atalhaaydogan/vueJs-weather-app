@@ -1,32 +1,28 @@
 import { createApp } from 'vue'
 import './style.css'
-import 'primeflex/primeflex.css';
 import App from './App.vue'
-import PrimeVue from 'primevue/config'
-import Button from 'primevue/button';
-import InputText from "primevue/inputtext";
-import Card from 'primevue/card';
+import PrimeVue from 'primevue/config';
 import { createPinia } from 'pinia'
+import Button from 'primevue/button';
+import Card from 'primevue/card';
+import InputText from "primevue/inputtext";
+import Skeleton from 'primevue/skeleton';
 
-const app = createApp(App);
+import 'primevue/resources/themes/lara-light-teal/theme.css';
+import 'primevue/resources/primevue.min.css';
+import 'primeicons/primeicons.css';
+import 'primeflex/primeflex.css';
+
 const pinia = createPinia()
 
-app.use(PrimeVue)
+const app = createApp(App);
 
-app.component('Button', Button)
-app.component('InputText', InputText)
-app.component('Card', Card)
-
+app.use(PrimeVue);
 app.use(pinia)
 
+app.component('Button', Button);
+app.component('Card', Card);
+app.component('InputText', InputText)
+app.component('Skeleton', Skeleton)
 
 app.mount('#app')
-
-
-
-
-
-
-
-
-
