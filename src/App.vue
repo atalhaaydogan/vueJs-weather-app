@@ -11,7 +11,8 @@ const addCity = () => {
   const cityNameNormalized = cityName.value.toLocaleLowerCase()
 
   if (cityNameNormalized && weatherStore.cities.indexOf(cityNameNormalized) === -1) {
-    weatherStore.cities.push(cityNameNormalized)
+    weatherStore.cities.push(cityNameNormalized);
+
   }
 
   cityName.value = ''
