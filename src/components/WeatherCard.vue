@@ -13,6 +13,8 @@ const props = defineProps({
 const cityPhotoUrl = ref<string>('');
 const temp = ref<string>('');
 const desc = ref<string>('');
+const dataLoaded = ref<boolean>(false);
+
 
 const getCityPhotoUrl = async (city: string) => {
   await axios.get(`https://api.teleport.org/api/urban_areas/slug:${city.toLocaleLowerCase()}/images/`)
@@ -47,11 +49,12 @@ onMounted(async () => {
   // await getCityPhotoUrl(props.city)
 
   try {
-    await Promise.all([getCityWeather(props.city),getCityPhotoUrl(props.city)])
+    await Promise.all([getCityWeather(props.city), getCityPhotoUrl(props.city)])
+    dataLoaded.value = true;
   }
   catch (error) {
     console.log(error);
-    
+
   }
 })
 
@@ -60,65 +63,84 @@ const remove = () => {
 }
 
 const getWeatherIcon = (description: any) => {
-    let iconClass = "pi pi-question-circle";
-    switch (description) {
-        case "clear sky":
-            iconClass = "pi pi-sun";
-            break;
-        case "few clouds":
-            iconClass = "pi pi-cloud";
-            break;
-        case "scattered clouds":
-            iconClass = "pi pi-cloud";
-            break;
-        case "broken clouds":
-            iconClass = "pi pi-cloud";
-            break;
-        case "shower rain":
-            iconClass = "pi pi-cloud-rain";
-            break;
-        case "rain":
-            iconClass = "pi pi-cloud-rain";
-            break;
-        case "thunderstorm":
-            iconClass = "pi pi-flash";
-            break;
-        case "snow":
-            iconClass = "pi pi-snowflake";
-            break;
-        case "mist":
-            iconClass = "pi pi-fog";
-            break;
-        case "smoke":
-            iconClass = "pi pi-fog";
-            break;
-        case "haze":
-            iconClass = "pi pi-fog";
-            break;
-        case "dust":
-            iconClass = "pi pi-fog";
-            break;
-    }
-    return iconClass;
+  let iconClass = "pi pi-question-circle";
+  switch (description) {
+    case "clear sky":
+      iconClass = "pi pi-sun";
+      break;
+    case "few clouds":
+      iconClass = "pi pi-cloud";
+      break;
+    case "scattered clouds":
+      iconClass = "pi pi-cloud";
+      break;
+    case "broken clouds":
+      iconClass = "pi pi-cloud";
+      break;
+    case "shower rain":
+      iconClass = "pi pi-cloud-rain";
+      break;
+    case "rain":
+      iconClass = "pi pi-cloud-rain";
+      break;
+    case "thunderstorm":
+      iconClass = "pi pi-flash";
+      break;
+    case "snow":
+      iconClass = "pi pi-snowflake";
+      break;
+    case "mist":
+      iconClass = "pi pi-fog";
+      break;
+    case "smoke":
+      iconClass = "pi pi-fog";
+      break;
+    case "haze":
+      iconClass = "pi pi-fog";
+      break;
+    case "dust":
+      iconClass = "pi pi-fog";
+      break;
+  }
+  return iconClass;
 };
 </script>
 
 <template>
-  <Card class="overflow-hidden" style="width: 25em">
-    <template #header>
-      <div class="h-15rem bg-cover text-right p-2" :style="{ backgroundImage: `url(${cityPhotoUrl})` }">
-        <Button class="deleteIcon" icon="pi pi-times" severity="danger" text rounded aria-label="Remove" @click="remove" />
-      </div>
-    </template>
-    <template #title>
-      <div class="text-center uppercase">{{ city }}</div></template>
-    <template #content>
-      <p class="text-center text-xl">
-        {{ temp }}
-      </p>
-      <p class="text-center text-xl">
-      <i :class="getWeatherIcon(desc)"></i>
-      </p>
-    </template>
-  </Card>
+  <div v-if="dataLoaded">
+    <Card class="overflow-hidden" style="width: 25em">
+      <template #header>
+        <div class="h-15rem bg-cover text-right p-2" :style="{ backgroundImage: `url(${cityPhotoUrl})` }">
+          <Button class="deleteIcon" icon="pi pi-times" severity="danger" text rounded aria-label="Remove"
+            @click="remove" />
+        </div>
+      </template>
+      <template #title>
+        <div class="text-center uppercase">{{ city }}</div>
+      </template>
+      <template #content>
+        <p class="text-center text-xl">
+          {{ temp }}
+        </p>
+        <p class="text-center text-xl">
+          <i :class="getWeatherIcon(desc)"></i>
+        </p>
+      </template>
+    </Card>
+  </div>
+
+  <div v-else>
+    <Card style="width: 25em;">
+      <template #header>
+        <Skeleton height="15rem" class="mb-2" borderRadius="16px"></Skeleton>
+      </template>
+      <template #title>
+        <Skeleton class="mb-2" borderRadius="16px"></Skeleton>
+      </template>
+      <template #content>
+        <Skeleton borderRadius="16px" class="mb-2"></Skeleton>
+        <Skeleton class="mb-2" borderRadius="16px"></Skeleton>
+      </template>
+    </Card>
+  </div>
 </template>
