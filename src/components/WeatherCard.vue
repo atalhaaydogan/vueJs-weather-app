@@ -90,8 +90,10 @@ const getCityWeather = async (city: string) => {
 };
 
 onMounted(async () => {
-  await getCityWeather(props.city)
-  await getCityPhotoUrl(props.city)
+  // await getCityWeather(props.city)
+  // await getCityPhotoUrl(props.city)
+
+  await Promise.all([getCityWeather(props.city),getCityPhotoUrl(props.city)])
 
   timer = setInterval(() => {
     counter.value--
