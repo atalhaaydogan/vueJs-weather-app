@@ -162,7 +162,6 @@ watch(counter, async () => {
       <template #content>
         <Skeleton borderRadius="16px" class="mb-2"></Skeleton>
         <Skeleton class="mb-2" borderRadius="16px"></Skeleton>
-        <Skeleton class="mb-2" borderRadius="16px"></Skeleton>
       </template>
       <template #footer>
         <Skeleton class="mb-2" borderRadius="16px"></Skeleton>
