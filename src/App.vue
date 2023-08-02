@@ -26,9 +26,9 @@ const addCity = () => {
   </div>
 
 
-  <div class="grid">
-    <div class="col-3" v-for="city in weatherStore.cities">
-      <WeatherCard :city="city" />
+  <div class="grid mt-5 ">
+    <div class="xl:col-3 lg:col-6 md:col-10 sm:col-12" v-for="city in weatherStore.cities">
+      <WeatherCard class="mt-3" :city="city" />
     </div>
   </div>
 </template>

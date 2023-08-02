@@ -119,28 +119,27 @@ watch(counter, async () => {
 </script>
 
 <template>
-    <Card style="width: 25em">
-      <template #header>
-        <div class="h-15rem bg-cover text-right p-2" :style="{ backgroundImage: `url(${cityPhotoUrl})` }">
-          <Button class="refreshIcon" icon="pi pi-refresh" severity="success" text rounded aria-label="Refresh"
-            @click="refresh" />
-          <Button class="deleteIcon" icon="pi pi-times" severity="danger" text rounded aria-label="Remove"
-            @click="remove" />
+  <Card class="overflow-hidden" style="width: 25em">
+    <template #header>
+      <div class="h-15rem bg-cover text-right p-2" :style="{ backgroundImage: `url(${cityPhotoUrl})` }">
+        <Button class="refreshIcon" icon="pi pi-refresh" severity="success" text rounded aria-label="Refresh"
+          @click="refresh" />
+        <Button class="deleteIcon" icon="pi pi-times" severity="danger" text rounded aria-label="Remove"
+          @click="remove" />
+      </div>
+    </template>
+    <template #title>
+      <div class="text-center uppercase">{{ city }}</div>
+    </template>
+    <template #content>
+      <p class="text-center text-xl">
+        {{ temp }}
+      </p>
+      <p class="text-center text-xl">
+        <i :class="getWeatherIcon(desc)"></i>
+      </p>
+    </template>
+    <template #footer>{{ counter }}</template>
 
-        </div>
-      </template>
-      <template #title>
-        <div class="text-center uppercase">{{ city }}</div>
-      </template>
-      <template #content>
-        <p class="text-center text-xl">
-          {{ temp }}
-        </p>
-        <p class="text-center text-xl">
-          <i :class="getWeatherIcon(desc)"></i>
-        </p>
-      </template>
-
-      <template #footer>{{ counter }}</template>
   </Card>
 </template>
