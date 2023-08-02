@@ -6,7 +6,6 @@ import { createPinia } from 'pinia'
 import Button from 'primevue/button';
 import Card from 'primevue/card';
 import InputText from "primevue/inputtext";
-import Skeleton from 'primevue/skeleton';
 
 import 'primevue/resources/themes/lara-light-teal/theme.css';
 import 'primevue/resources/primevue.min.css';
@@ -23,6 +22,5 @@ app.use(pinia)
 app.component('Button', Button);
 app.component('Card', Card);
 app.component('InputText', InputText)
-app.component('Skeleton', Skeleton)
 
 app.mount('#app')
