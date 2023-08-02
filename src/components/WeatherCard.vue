@@ -15,8 +15,51 @@ const cityPhotoUrl = ref<string>('');
 const temp = ref<string>('');
 const desc = ref<string>('');
 const counter = ref(props.interval / 1000);
-
 let timer: NodeJS.Timer;
+
+const getWeatherIcon = (description: any) => {
+  let iconClass = "pi pi-question-circle";
+  switch (description) {
+    case "clear sky":
+      iconClass = "pi pi-sun";
+      break;
+    case "few clouds":
+      iconClass = "pi pi-cloud";
+      break;
+    case "scattered clouds":
+      iconClass = "pi pi-cloud";
+      break;
+    case "broken clouds":
+      iconClass = "pi pi-cloud";
+      break;
+    case "shower rain":
+      iconClass = "pi pi-cloud-rain";
+      break;
+    case "rain":
+      iconClass = "pi pi-cloud-rain";
+      break;
+    case "thunderstorm":
+      iconClass = "pi pi-flash";
+      break;
+    case "snow":
+      iconClass = "pi pi-snowflake";
+      break;
+    case "mist":
+      iconClass = "pi pi-fog";
+      break;
+    case "smoke":
+      iconClass = "pi pi-fog";
+      break;
+    case "haze":
+      iconClass = "pi pi-fog";
+      break;
+    case "dust":
+      iconClass = "pi pi-fog";
+      break;
+  }
+  return iconClass;
+};
+
 
 const getCityPhotoUrl = async (city: string) => {
   await axios.get(`https://api.teleport.org/api/urban_areas/slug:${city.toLocaleLowerCase()}/images/`)
@@ -76,24 +119,28 @@ watch(counter, async () => {
 </script>
 
 <template>
-  <Card style="width: 25em">
-    <template #header>
-      <div class="h-15rem bg-cover text-right p-2" :style="{ backgroundImage: `url(${cityPhotoUrl})` }">
-        <Button class="refreshIcon" icon="pi pi-refresh" severity="success" text rounded aria-label="Refresh" @click="refresh" />
-        <Button class="deleteIcon" icon="pi pi-times" severity="danger" text rounded aria-label="Remove" @click="remove" />
+    <Card style="width: 25em">
+      <template #header>
+        <div class="h-15rem bg-cover text-right p-2" :style="{ backgroundImage: `url(${cityPhotoUrl})` }">
+          <Button class="refreshIcon" icon="pi pi-refresh" severity="success" text rounded aria-label="Refresh"
+            @click="refresh" />
+          <Button class="deleteIcon" icon="pi pi-times" severity="danger" text rounded aria-label="Remove"
+            @click="remove" />
 
-      </div>
-    </template>
-    <template #title>{{ city }}</template>
-    <template #content>
-      <p>
-        {{ temp }}
-      </p>
-      <p>
-        {{ desc }}
-      </p>
-    </template>
+        </div>
+      </template>
+      <template #title>
+        <div class="text-center uppercase">{{ city }}</div>
+      </template>
+      <template #content>
+        <p class="text-center text-xl">
+          {{ temp }}
+        </p>
+        <p class="text-center text-xl">
+          <i :class="getWeatherIcon(desc)"></i>
+        </p>
+      </template>
 
-    <template #footer>{{ counter }}</template>
+      <template #footer>{{ counter }}</template>
   </Card>
 </template>
