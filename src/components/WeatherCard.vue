@@ -79,8 +79,8 @@ watch(counter, async () => {
   <Card style="width: 25em">
     <template #header>
       <div class="h-15rem bg-cover text-right p-2" :style="{ backgroundImage: `url(${cityPhotoUrl})` }">
-        <Button icon="pi pi-times" severity="danger" text rounded aria-label="Remove" @click="remove" />
-        <Button icon="pi pi-refresh" severity="success" text rounded aria-label="Refresh" @click="refresh" />
+        <Button class="refreshIcon" icon="pi pi-refresh" severity="success" text rounded aria-label="Refresh" @click="refresh" />
+        <Button class="deleteIcon" icon="pi pi-times" severity="danger" text rounded aria-label="Remove" @click="remove" />
 
       </div>
     </template>

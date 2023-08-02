@@ -1,3 +1,15 @@
 body {
   font-family: var(--font-family);
 }
+
+.deleteIcon{display: none !important;}
+
+.p-card:hover .deleteIcon{
+  display: inline !important;
+}
+
+.refreshIcon{display: none !important;}
+
+.p-card:hover .refreshIcon{
+  display: inline !important;
+}
