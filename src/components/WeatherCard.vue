@@ -16,6 +16,7 @@ const temp = ref<string>('');
 const desc = ref<string>('');
 const counter = ref(props.interval / 1000);
 let timer: NodeJS.Timer;
+const dataLoaded = ref<boolean>(false);
 
 const getWeatherIcon = (description: any) => {
   let iconClass = "pi pi-question-circle";
@@ -93,7 +94,8 @@ onMounted(async () => {
   // await getCityWeather(props.city)
   // await getCityPhotoUrl(props.city)
 
-  await Promise.all([getCityWeather(props.city),getCityPhotoUrl(props.city)])
+  await Promise.all([getCityWeather(props.city), getCityPhotoUrl(props.city)])
+  dataLoaded.value = true;
 
   timer = setInterval(() => {
     counter.value--
@@ -121,27 +123,50 @@ watch(counter, async () => {
 </script>
 
 <template>
-  <Card class="overflow-hidden" style="width: 25em">
-    <template #header>
-      <div class="h-15rem bg-cover text-right p-2" :style="{ backgroundImage: `url(${cityPhotoUrl})` }">
-        <Button class="refreshIcon" icon="pi pi-refresh" severity="success" text rounded aria-label="Refresh"
-          @click="refresh" />
-        <Button class="deleteIcon" icon="pi pi-times" severity="danger" text rounded aria-label="Remove"
-          @click="remove" />
-      </div>
-    </template>
-    <template #title>
-      <div class="text-center uppercase">{{ city }}</div>
-    </template>
-    <template #content>
-      <p class="text-center text-xl">
-        {{ temp }}
-      </p>
-      <p class="text-center text-xl">
-        <i :class="getWeatherIcon(desc)"></i>
-      </p>
-    </template>
-    <template #footer>{{ counter }}</template>
+  <div v-if="dataLoaded">
+    <Card class="overflow-hidden" style="width: 25em">
+      <template #header>
+        <div class="h-15rem bg-cover text-right p-2" :style="{ backgroundImage: `url(${cityPhotoUrl})` }">
+          <Button class="refreshIcon" icon="pi pi-refresh" severity="success" text rounded aria-label="Refresh"
+            @click="refresh" />
+          <Button class="deleteIcon" icon="pi pi-times" severity="danger" text rounded aria-label="Remove"
+            @click="remove" />
+        </div>
+      </template>
+      <template #title>
+        <div class="text-center uppercase">{{ city }}</div>
+      </template>
+      <template #content>
+        <p class="text-center text-xl">
+          {{ temp }}
+        </p>
+        <p class="text-center text-xl">
+          <i :class="getWeatherIcon(desc)"></i>
+        </p>
+      </template>
+      <template #footer>
+        <div class="text-center"> {{ counter }} </div>
+      </template>
 
-  </Card>
+    </Card>
+  </div>
+
+  <div v-else>
+    <Card style="width: 25em;">
+      <template #header>
+        <Skeleton height="15rem" class="mb-2" borderRadius="16px"></Skeleton>
+      </template>
+      <template #title>
+        <Skeleton class="mb-2" borderRadius="16px"></Skeleton>
+      </template>
+      <template #content>
+        <Skeleton borderRadius="16px" class="mb-2"></Skeleton>
+        <Skeleton class="mb-2" borderRadius="16px"></Skeleton>
+        <Skeleton class="mb-2" borderRadius="16px"></Skeleton>
+      </template>
+      <template #footer>
+        <Skeleton class="mb-2" borderRadius="16px"></Skeleton>
+      </template>
+    </Card>
+  </div>
 </template>

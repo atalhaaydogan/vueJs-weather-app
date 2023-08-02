@@ -11,6 +11,7 @@ import 'primevue/resources/themes/lara-light-teal/theme.css';
 import 'primevue/resources/primevue.min.css';
 import 'primeicons/primeicons.css';
 import 'primeflex/primeflex.css';
+import Skeleton from 'primevue/skeleton';
 
 const pinia = createPinia()
 
@@ -21,6 +22,7 @@ app.use(pinia)
 
 app.component('Button', Button);
 app.component('Card', Card);
-app.component('InputText', InputText)
+app.component('InputText', InputText);
+app.component('Skeleton', Skeleton);
 
 app.mount('#app')
