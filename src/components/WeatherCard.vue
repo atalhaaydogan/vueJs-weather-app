@@ -17,6 +17,9 @@ const desc = ref<string>('');
 const counter = ref(props.interval / 1000);
 let timer: NodeJS.Timer;
 const dataLoaded = ref<boolean>(false);
+const refreshing = ref<boolean>(false);
+
+
 
 const getWeatherIcon = (description: any) => {
   let iconClass = "pi pi-question-circle";
@@ -91,8 +94,10 @@ const getCityWeather = async (city: string) => {
 };
 
 onMounted(async () => {
-  await Promise.all([getCityWeather(props.city), getCityPhotoUrl(props.city)])
+  await Promise.all([getCityWeather(props.city), getCityPhotoUrl(props.city)]);
   dataLoaded.value = true;
+
+
 
   timer = setInterval(() => {
     counter.value--
@@ -101,6 +106,7 @@ onMounted(async () => {
 
 onUnmounted(() => {
   clearInterval(timer)
+
 });
 
 const remove = () => {
@@ -109,7 +115,9 @@ const remove = () => {
 
 const refresh = async () => {
   counter.value = props.interval / 1000
+  refreshing.value = true;
   await getCityWeather(props.city)
+  refreshing.value = false;
 }
 
 watch(counter, async () => {
@@ -121,7 +129,7 @@ watch(counter, async () => {
 
 <template>
   <div v-if="dataLoaded">
-    <Card class="overflow-hidden" style="width: 25em">
+    <Card class="overflow-hidden relative" style="width: 25em">
       <template #header>
         <div class="h-15rem bg-cover text-right p-2" :style="{ backgroundImage: `url(${cityPhotoUrl})` }">
           <Button class="refreshIcon" icon="pi pi-refresh" severity="success" text rounded aria-label="Refresh"
@@ -143,10 +151,19 @@ watch(counter, async () => {
       </template>
       <template #footer>
         <div class="text-center"> {{ counter }} </div>
+
+        <div v-if="refreshing" class="refresh-wrapper absolute">
+          <div class="refresh-spinner">
+            <ProgressSpinner style="width: 50px; height: 50px" strokeWidth="8" fill="var(--surface-ground)"
+              animationDuration=".5s" aria-label="Custom ProgressSpinner" />
+          </div>
+        </div>
       </template>
+
 
     </Card>
   </div>
+
 
   <div v-else>
     <Card style="width: 25em;">
@@ -164,5 +181,29 @@ watch(counter, async () => {
         <Skeleton class="mb-2" borderRadius="16px"></Skeleton>
       </template>
     </Card>
+
+
   </div>
 </template>
+
+<style scoped>
+.refresh-spinner {
+  top: 50%;
+  left: 50%;
+  z-index: 999;
+
+
+}
+
+.refresh-wrapper {
+  top: 0;
+  left: 0;
+  background-color: #22222263;
+  width: 25em;
+  height: 35em;
+  z-index: 998;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+</style>
